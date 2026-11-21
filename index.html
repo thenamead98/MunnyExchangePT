@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Worldwide Currency Exchange</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#e9f0ed;--card:#fff;--ink:#10231f;--mute:#5b6f69;--line:#cfdcd7;--acc:#0b5d4b;--accink:#fff;--brass:#b8862b;--board:#10231f;--boardink:#e9f0ed;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1714;--card:#14241f;--ink:#e6f0ec;--mute:#8aa39b;--line:#27403a;--acc:#3ec9a0;--accink:#08201a;--brass:#e0b256;--board:#091210;--boardink:#e6f0ec;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0c1714;--card:#14241f;--ink:#e6f0ec;--mute:#8aa39b;--line:#27403a;--acc:#3ec9a0;--accink:#08201a;--brass:#e0b256;--board:#091210;--boardink:#e6f0ec;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+main{max-width:920px;margin:0 auto;padding:28px 16px 48px}
+h1{font-size:clamp(1.7rem,5vw,2.6rem);font-weight:800;letter-spacing:-.02em;margin:0 0 4px}
+.sub{color:var(--mute);margin:0 0 22px}
+.conv{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.row{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:end}
+label{display:block;font-size:.85rem;color:var(--mute);margin-bottom:4px}
+input,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:11px 12px}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid var(--brass);outline-offset:1px}
+.amt{margin-bottom:14px;font-size:1.3rem;font-weight:600}
+.swap{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--acc);font-size:1.2rem;cursor:pointer}
+.swap:hover{background:var(--acc);color:var(--accink)}
+.out{margin-top:18px;padding:18px;border-radius:10px;background:var(--board);color:var(--boardink)}
+.out small{opacity:.75}
+.big{font-size:clamp(1.8rem,7vw,3.2rem);font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--brass);word-break:break-word}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 14px;font:inherit;font-size:.9rem;cursor:pointer}
+.chip:hover{border-color:var(--acc);color:var(--acc)}
+h2{font-size:1.3rem;margin:34px 0 4px}
+.tools{display:flex;gap:10px;margin:10px 0}
+.tools input{flex:1}
+.wrap{max-height:460px;overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line)}
+th{position:sticky;top:0;background:var(--board);color:var(--boardink);font-weight:600}
+td.n{text-align:right}th.n{text-align:right}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--bg)}
+tbody tr.sel{background:color-mix(in srgb,var(--brass) 22%,transparent)}
+.code{font-weight:800;color:var(--acc)}
+.note{color:var(--mute);font-size:.85rem;margin-top:14px}
+.theme{float:right;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 12px;font:inherit;cursor:pointer}
+@media(max-width:560px){.row{grid-template-columns:1fr}.swap{justify-self:center}th:nth-child(2),td:nth-child(2){display:none}}
+body{background:radial-gradient(900px 500px at 85% -10%,color-mix(in srgb,var(--acc) 30%,transparent),transparent),radial-gradient(700px 420px at -5% 15%,color-mix(in srgb,var(--brass) 24%,transparent),transparent),var(--bg);background-attachment:fixed}
+.ticker{overflow:hidden;background:var(--board);color:var(--boardink);padding:9px 0;font-size:.9rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.track{display:flex;gap:40px;width:max-content;animation:scroll 45s linear infinite}
+.track:hover{animation-play-state:paused}
+.track b{color:var(--brass);margin-left:4px}
+@keyframes scroll{to{transform:translateX(-50%)}}
+h1{font-size:clamp(2rem,6vw,3.4rem);background:linear-gradient(90deg,var(--ink) 30%,var(--acc));-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:4px}
+.conv{border-radius:22px;padding:26px;background:color-mix(in srgb,var(--card) 84%,transparent);backdrop-filter:blur(12px);box-shadow:0 24px 60px -28px color-mix(in srgb,var(--acc) 60%,transparent)}
+input,select{transition:border-color .2s,box-shadow .2s;border-radius:12px}
+input:hover,select:hover{border-color:var(--acc)}
+input:focus,select:focus{box-shadow:0 0 0 4px color-mix(in srgb,var(--acc) 22%,transparent)}
+.swap{transition:transform .45s cubic-bezier(.4,1.6,.5,1),background .2s;box-shadow:0 4px 14px -6px var(--acc)}
+.swap.flip{transform:rotate(180deg)}
+.swap:active{scale:.92}
+.out{position:relative;overflow:hidden;border-radius:18px;padding:22px;background:linear-gradient(135deg,var(--board),color-mix(in srgb,var(--acc) 38%,var(--board)))}
+.out::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 40%,rgba(255,255,255,.09) 50%,transparent 60%);transform:translateX(-100%);animation:shine 7s ease-in-out infinite}
+@keyframes shine{60%,100%{transform:translateX(100%)}}
+.copy{display:block;margin-top:12px;border:1px solid rgba(255,255,255,.3);background:transparent;color:var(--boardink);border-radius:999px;padding:6px 16px;font:inherit;font-size:.85rem;cursor:pointer;transition:background .2s}
+.copy:hover{background:rgba(255,255,255,.14)}
+.chip{transition:transform .15s,border-color .15s,color .15s}
+.chip:hover{transform:translateY(-2px)}
+.wrap{border-radius:18px;box-shadow:0 18px 40px -30px var(--acc)}
+tbody tr{transition:background .15s}
+tbody tr:hover td.n{color:var(--acc);font-weight:600}
+.av{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;margin-right:10px;font-style:normal;font-size:.65rem;font-weight:800;color:#fff;background:linear-gradient(135deg,hsl(var(--h) 60% 45%),hsl(calc(var(--h) + 40) 60% 32%));vertical-align:middle}
+@media (prefers-reduced-motion:reduce){.track,.out::after{animation:none}.swap{transition:none}}
+</style>
+</head>
+<body>
+<div class="ticker" aria-hidden="true"><div class="track" id="track"></div></div>
+<main>
+<button class="theme" id="theme" type="button">Dark / light</button>
+<h1>Currency exchange</h1>
+<p class="sub">Convert between <span id="count">160</span> world currencies.</p>
+
+<section class="conv" aria-label="Converter">
+  <label for="amt">Amount</label>
+  <input id="amt" class="amt" type="number" inputmode="decimal" min="0" step="any" value="100">
+  <div class="row">
+    <div><label for="from">From</label><select id="from"></select></div>
+    <button class="swap" id="swap" type="button" aria-label="Swap currencies">⇄</button>
+    <div><label for="to">To</label><select id="to"></select></div>
+  </div>
+  <div class="out" aria-live="polite">
+    <small id="l1"></small>
+    <div class="big" id="res"></div>
+    <small id="l2"></small>
+    <button class="copy" id="copy" type="button">Copy result</button>
+  </div>
+  <div class="chips" id="chips"></div>
+</section>
+
+<h2>Rate board</h2>
+<p class="sub" style="margin-bottom:0">How much 1 <b id="bn"></b> buys in every currency. Tap a row to convert to it.</p>
+<div class="tools"><input id="q" type="search" placeholder="Search by code or name, e.g. yen or THB" aria-label="Search currencies"></div>
+<div class="wrap"><table><thead><tr><th>Code</th><th>Currency</th><th class="n">Rate</th></tr></thead><tbody id="body"></tbody></table></div>
+<p class="note">Rates are an indicative snapshot, not live market prices, and exclude bank or exchange fees. Check your provider’s rate before you trade.</p>
+</main>
+<script>
+// code|name|units per 1 USD (indicative snapshot)
+const RAW=`USD|US Dollar|1;EUR|Euro|0.86;GBP|British Pound|0.75;JPY|Japanese Yen|152;CHF|Swiss Franc|0.80;CAD|Canadian Dollar|1.39;AUD|Australian Dollar|1.52;NZD|New Zealand Dollar|1.75;CNY|Chinese Yuan|7.1;HKD|Hong Kong Dollar|7.78;SGD|Singapore Dollar|1.29;THB|Thai Baht|32.5;INR|Indian Rupee|88.5;KRW|South Korean Won|1450;
+AED|UAE Dirham|3.6725;AFN|Afghan Afghani|66;ALL|Albanian Lek|83;AMD|Armenian Dram|383;ANG|Netherlands Antillean Guilder|1.79;AOA|Angolan Kwanza|912;ARS|Argentine Peso|1450;AWG|Aruban Florin|1.79;AZN|Azerbaijani Manat|1.70;BAM|Bosnia-Herzegovina Mark|1.68;BBD|Barbadian Dollar|2;BDT|Bangladeshi Taka|122;BHD|Bahraini Dinar|0.376;BIF|Burundian Franc|2960;BMD|Bermudian Dollar|1;BND|Brunei Dollar|1.30;BOB|Bolivian Boliviano|6.91;BRL|Brazilian Real|5.4;BSD|Bahamian Dollar|1;BTN|Bhutanese Ngultrum|88;BWP|Botswana Pula|13.4;BYN|Belarusian Ruble|3.0;BZD|Belize Dollar|2;
+CDF|Congolese Franc|2250;CLP|Chilean Peso|945;COP|Colombian Peso|3900;CRC|Costa Rican Colón|500;CUP|Cuban Peso|24;CVE|Cape Verdean Escudo|95;CZK|Czech Koruna|21;DJF|Djiboutian Franc|177.7;DKK|Danish Krone|6.45;DOP|Dominican Peso|63;DZD|Algerian Dinar|130;EGP|Egyptian Pound|47.5;ERN|Eritrean Nakfa|15;ETB|Ethiopian Birr|150;FJD|Fijian Dollar|2.27;FKP|Falkland Islands Pound|0.75;GEL|Georgian Lari|2.72;GHS|Ghanaian Cedi|11;GIP|Gibraltar Pound|0.75;GMD|Gambian Dalasi|72;GNF|Guinean Franc|8680;GTQ|Guatemalan Quetzal|7.67;GYD|Guyanese Dollar|209;
+HNL|Honduran Lempira|26.2;HTG|Haitian Gourde|131;HUF|Hungarian Forint|335;IDR|Indonesian Rupiah|16600;ILS|Israeli Shekel|3.3;IQD|Iraqi Dinar|1310;IRR|Iranian Rial|1000000;ISK|Icelandic Króna|123;JMD|Jamaican Dollar|160;JOD|Jordanian Dinar|0.709;KES|Kenyan Shilling|129;KGS|Kyrgyzstani Som|87.4;KHR|Cambodian Riel|4030;KMF|Comorian Franc|423;KPW|North Korean Won|900;KWD|Kuwaiti Dinar|0.307;KYD|Cayman Islands Dollar|0.833;KZT|Kazakhstani Tenge|540;LAK|Lao Kip|21700;LBP|Lebanese Pound|89500;LKR|Sri Lankan Rupee|303;LRD|Liberian Dollar|183;LSL|Lesotho Loti|17.3;LYD|Libyan Dinar|5.4;
+MAD|Moroccan Dirham|9.2;MDL|Moldovan Leu|17;MGA|Malagasy Ariary|4450;MKD|Macedonian Denar|52.8;MMK|Myanmar Kyat|2100;MNT|Mongolian Tögrög|3600;MOP|Macanese Pataca|8.0;MRU|Mauritanian Ouguiya|40;MUR|Mauritian Rupee|45.5;MVR|Maldivian Rufiyaa|15.4;MWK|Malawian Kwacha|1735;MXN|Mexican Peso|18.4;MYR|Malaysian Ringgit|4.2;MZN|Mozambican Metical|63.9;NAD|Namibian Dollar|17.3;NGN|Nigerian Naira|1500;NIO|Nicaraguan Córdoba|36.8;NOK|Norwegian Krone|10.1;NPR|Nepalese Rupee|141;OMR|Omani Rial|0.385;PAB|Panamanian Balboa|1;PEN|Peruvian Sol|3.5;PGK|Papua New Guinean Kina|4.2;PHP|Philippine Peso|58.5;PKR|Pakistani Rupee|281;PLN|Polish Złoty|3.65;PYG|Paraguayan Guaraní|7100;
+QAR|Qatari Riyal|3.64;RON|Romanian Leu|4.4;RSD|Serbian Dinar|100.5;RUB|Russian Ruble|81;RWF|Rwandan Franc|1450;SAR|Saudi Riyal|3.75;SBD|Solomon Islands Dollar|8.4;SCR|Seychellois Rupee|14.5;SDG|Sudanese Pound|600;SEK|Swedish Krona|9.4;SHP|Saint Helena Pound|0.75;SLE|Sierra Leonean Leone|23;SOS|Somali Shilling|571;SRD|Surinamese Dollar|38;SSP|South Sudanese Pound|4500;STN|São Tomé and Príncipe Dobra|21;SVC|Salvadoran Colón|8.75;SZL|Swazi Lilangeni|17.3;TJS|Tajikistani Somoni|9.3;TMT|Turkmenistani Manat|3.5;TND|Tunisian Dinar|2.95;TOP|Tongan Paʻanga|2.4;TRY|Turkish Lira|42;TTD|Trinidad and Tobago Dollar|6.8;TWD|New Taiwan Dollar|30.8;TZS|Tanzanian Shilling|2450;
+UAH|Ukrainian Hryvnia|41.5;UGX|Ugandan Shilling|3480;UYU|Uruguayan Peso|40;UZS|Uzbekistani Som|12000;VES|Venezuelan Bolívar|230;VND|Vietnamese Dong|26300;VUV|Vanuatu Vatu|120;WST|Samoan Tala|2.8;XAF|Central African CFA Franc|565;XCD|East Caribbean Dollar|2.7;XOF|West African CFA Franc|565;XPF|CFP Franc|103;YER|Yemeni Rial|250;ZAR|South African Rand|17.3;ZMW|Zambian Kwacha|23;ZWG|Zimbabwe Gold|26`;
+const C=RAW.replace(/\n/g,'').split(';').filter(Boolean).map(s=>{const[a,b,c]=s.split('|');return{c:a,n:b,r:+c}});
+const M=Object.fromEntries(C.map(x=>[x.c,x]));
+const $=id=>document.getElementById(id);
+const fmt=(v,max)=>{if(!isFinite(v))return'–';const d=v>=1000?2:v>=1?4:v>=.01?6:8;return v.toLocaleString(undefined,{maximumFractionDigits:max??d})};
+const rate=(a,b)=>M[b].r/M[a].r;
+let from='USD',to='THB';
+const opts=C.map(x=>`<option value="${x.c}">${x.c} – ${x.n}</option>`).join('');
+$('from').innerHTML=opts;$('to').innerHTML=opts;$('count').textContent=C.length;
+function calc(){
+  from=$('from').value;to=$('to').value;
+  const a=parseFloat($('amt').value)||0,r=rate(from,to);
+  $('l1').textContent=`${fmt(a,2)} ${M[from].n} =`;
+  countTo(a*r,to);
+  $('l2').textContent=`1 ${from} = ${fmt(r)} ${to}  ·  1 ${to} = ${fmt(1/r)} ${from}`;
+  $('bn').textContent=from;
+  board();
+}
+function board(){
+  const q=$('q').value.trim().toLowerCase();
+  $('body').innerHTML=C.filter(x=>x.c!==from&&(!q||x.c.toLowerCase().includes(q)||x.n.toLowerCase().includes(q)))
+   .map(x=>`<tr data-c="${x.c}" class="${x.c===to?'sel':''}"><td class="code"><i class="av" style="--h:${hue(x.c)}">${x.c.slice(0,2)}</i>${x.c}</td><td>${x.n}</td><td class="n">${fmt(rate(from,x.c))}</td></tr>`).join('')
+   ||'<tr><td colspan="3">No currency matches that search. Try a code or a country’s currency name.</td></tr>';
+}
+$('from').value=from;$('to').value=to;
+['amt','from','to'].forEach(i=>$(i).addEventListener('input',calc));
+$('q').addEventListener('input',board);
+$('swap').onclick=()=>{const t=$('from').value;$('from').value=$('to').value;$('to').value=t;calc()};
+$('body').onclick=e=>{const tr=e.target.closest('tr');if(tr&&tr.dataset.c){$('to').value=tr.dataset.c;calc();window.scrollTo({top:0,behavior:'smooth'})}};
+$('chips').innerHTML=[['USD','THB'],['EUR','USD'],['GBP','EUR'],['USD','JPY'],['EUR','THB'],['USD','CNY']].map(p=>`<button class="chip" type="button" data-p="${p}">${p[0]} to ${p[1]}</button>`).join('');
+$('chips').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;const[p,q]=b.dataset.p.split(',');$('from').value=p;$('to').value=q;calc()};
+$('theme').onclick=()=>{const r=document.documentElement,d=getComputedStyle(r).colorScheme==='dark';r.dataset.theme=d?'light':'dark'};
+function hue(s){let h=0;for(const ch of s)h=(h*31+ch.charCodeAt(0))%360;return h}
+let shown=0,raf;
+function countTo(v,u){const el=$('res');cancelAnimationFrame(raf);
+ if(matchMedia('(prefers-reduced-motion:reduce)').matches||!isFinite(v)){el.textContent=`${fmt(v)} ${u}`;shown=v;return}
+ const s=shown,t0=performance.now();
+ (function step(t){const p=Math.min(1,(t-t0)/450),cur=p<1?s+(v-s)*(1-Math.pow(1-p,3)):v;shown=cur;el.textContent=`${fmt(cur)} ${u}`;if(p<1)raf=requestAnimationFrame(step)})(t0);
+}
+const TP=[['USD','THB'],['EUR','USD'],['GBP','USD'],['USD','JPY'],['USD','CNY'],['EUR','THB'],['USD','INR'],['AUD','USD'],['USD','CHF'],['USD','SGD']];
+const tk=TP.map(([a,b])=>`<span>${a}/${b}<b>${fmt(rate(a,b))}</b></span>`).join('');
+$('track').innerHTML=tk+tk;
+$('swap').addEventListener('click',()=>$('swap').classList.toggle('flip'));
+$('copy').onclick=async()=>{const b=$('copy');try{await navigator.clipboard.writeText($('res').textContent);b.textContent='Copied'}catch(e){b.textContent='Select the figure to copy it'}setTimeout(()=>b.textContent='Copy result',1600)};
+calc();
+</script>
+</body>
+</html>
